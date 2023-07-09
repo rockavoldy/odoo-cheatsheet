@@ -1,4 +1,7 @@
 # Odoo Cheatsheet
+[![CC-BY-SA 4.0](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+
+
 This repository exists to document my journey and some struggle i face while working with Odoo. this [gists here](https://gist.github.com/rockavoldy/46350ed3d37662ae9e2cc47ea7fb916a) is the first version of this documentation, i move it to a repository to make it easy to navigate, and when someone wants to contributes (Please contribute!)
 
 ## Table of Contents
@@ -219,7 +222,7 @@ For this tutorial, i have an assumption that you already have your configuration
 5. Now you can use the breakpoint feature too, and it will show you the call stack to reach that function from the first method called until paused by the breakpoint.
 
 ## Minimal odoo.conf
-Sometimes, when you run odoo by using argument, odoo will automatically create default `.odoorc`, and it will be used for all odoo version. When you're developing Odoo cross version, there is a chance that every version will mixed-up, like the directly of your custom addons, or the db used. So, it's better to use separate `odoo.conf` when you're developing custom module for different odoo version or database on the same machine.
+When you run odoo by running it only using argument, odoo will automatically create default `.odoorc` file (or something alike) that will be used as default odoo configuration. This `.odoorc` here sometimes can replace your custom `odoo.conf` or the parameters, so there is a chance when you have 2 separate custom-addons directory, and you are trying to exclude 1 directory from `addons_path` parameter, the path can still be included. So, it's better to use separate `odoo.conf` when you're developing custom module for different Odoo version or database on the same machine.
 ```sh
 [options]
 db_name = False
@@ -227,8 +230,8 @@ db_user = odoo
 db_password = False
 addons_path = addons, odoo/addons, enterprise, custom-addons
 ```
-Put it inside odoo directory, so then you can easily run it with only
+Above `odoo.conf` file is very minimal. You can put it inside odoo directory, same level as `odoo-bin`, then you can run it with only
 ```sh
 python3 odoo-bin -c odoo.conf -d <db-name>
 ```
-i'm not putting the db_name inside the conf to make it easier when i want to switch DB in the same project, so i don't need to update the conf again and again while doing the test.
+i'm not putting the db_name inside the conf to make it easier when i need to switch DB for the same project, so i don't need to update the conf again and again while in development and doing test on different db.
