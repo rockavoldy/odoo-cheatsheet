@@ -5,7 +5,25 @@
 This repository exists to document my journey and some struggle i face while working with Odoo. this [gists here](https://gist.github.com/rockavoldy/46350ed3d37662ae9e2cc47ea7fb916a) is the first version of this documentation, i move it to a repository to make it easy to navigate, and when someone wants to contributes (Please contribute!)
 
 ## Table of Contents
-See top-left icon before **README.md** name, it's a ToC you need!
+- [Odoo Cheatsheet](#odoo-cheatsheet)
+  - [Table of Contents](#table-of-contents)
+  - [Contributing](#contributing)
+  - [Useful links and articles](#useful-links-and-articles)
+  - [Some PDF reporting thingies](#some-pdf-reporting-thingies)
+    - [Create custom button to download report](#create-custom-button-to-download-report)
+    - [View report directly via URL](#view-report-directly-via-url)
+    - [Internationalization Odoo report](#internationalization-odoo-report)
+    - [Report not consistent showing header and footer](#report-not-consistent-showing-header-and-footer)
+  - [Backup and restore db (not specifically Odoo, but will be used every day)](#backup-and-restore-db-not-specifically-odoo-but-will-be-used-every-day)
+    - [Restore DB](#restore-db)
+    - [Backup DB](#backup-db)
+  - [Odoo unit test](#odoo-unit-test)
+    - [Odoo 11](#odoo-11)
+    - [Odoo 12 and Odoo 13](#odoo-12-and-odoo-13)
+    - [Odoo 14 and Odoo 15](#odoo-14-and-odoo-15)
+  - [Many2many field notation, and how to use them](#many2many-field-notation-and-how-to-use-them)
+  - [Use Odoo with VSCode Debugger](#use-odoo-with-vscode-debugger)
+  - [Minimal odoo.conf](#minimal-odooconf)
 
 ## Contributing
 Feel free to create new Pull Request if you want to add, modify, or give more clarification to some of the things that already in here, or anything that can be useful, really!
@@ -68,7 +86,7 @@ http://localhost:8069/report/html/sale.report_saleorder/38
 > [!IMPORTANT]
 > Make sure to check the pdf result too beside of the html result, because some style is not supported or can have different behavior in pdf, like css grid-layout. So, keep tinkering~
 
-### Internationalization report odoo 11
+### Internationalization Odoo report
 - https://stackoverflow.com/questions/60827887/odoo12-can-i-translate-strings-in-reports
 - If you are working on i18n, make sure to not use `--dev` tag when running odoo instance, because [Odoo will directly render the data from the views, and skipping i18n data](https://github.com/odoo/odoo/issues/35553), so translation won't work.
 
