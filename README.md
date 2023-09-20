@@ -10,7 +10,7 @@ See top-left icon before **README.md** name, it's a ToC you need!
 ## Contributing
 Feel free to create new Pull Request if you want to add, modify, or give more clarification to some of the things that already in here, or anything that can be useful, really!
 
-Just make sure that, every PR you create, there is a description on what changed. There is no template for that, at least a description on what changed that peoples can easily understand without the need to check every changes and commits.
+Just make sure that, every PR you create, it's better to have a description that explain your modification.
 
 ## Useful links and articles
 - [Widgets in Odoo](https://www.cybrosys.com/blog/widgets-in-odoo)
@@ -18,23 +18,25 @@ Just make sure that, every PR you create, there is a description on what changed
 - [Fields in Odoo](https://odoo-development.readthedocs.io/en/latest/dev/py/fields.html)
 - [Method decorators in Odoo 13](https://www.cybrosys.com/blog/method-decorators-odoo-13)
 - [clear related field with onchange when another field that depends on it is changed](https://learnopenerp.blogspot.com/2016/10/onchange-many2one-filed-in-odoo.html)
-- [XML xpath cheatsheet](https://devhints.io/xpath) ***NOT** all xpath here is supported by XML Odoo, do trial-and-error
-- [Change how search functionality works (change the fields use to filter, changes the display name)](https://www.odoo.com/forum/help-1/how-to-search-many2one-field-by-other-than-name-field-32809)
-- [Some options for many2one widgets (prevent user to open the link, quick create, or edit and such)](https://stackoverflow.com/questions/15630054/how-to-remove-create-and-edit-from-many2one-field/30590267#30590267)
-- [click-odoo: library that can help you to run a python code inside odoo environment (will be useful for testing, or to fetch onchange data that are not stored to DB)](https://github.com/acsone/click-odoo)
-- [Want to remove xml `<record>` but can't use active=False? can use `<delete>` tag (it will deleted completely from db, so make sure to check if the record is exist by id, make it only run once)](https://www.cybrosys.com/blog/delete-record-from-xml-code-odoo)
-- [Odoo rename custom module without losing any data that are tied to that custom model inside that module](https://gist.github.com/antespi/38978614e522b1a99563)
+- [XML xpath cheatsheet](https://devhints.io/xpath) ***NOT** all xpath here is supported by XML Odoo, please do trial-and-error
+- [Change the display name using `name_get` function](https://stackoverflow.com/a/62743976)
+- [Change search functionality to filter by other field other than default by overriding `name_search` function](https://stackoverflow.com/a/48146210)
+- [Some options for many2one widgets (prevent user to open the link, quick create, or edit and such)](https://stackoverflow.com/a/30590267)
+- [click-odoo: help to run python code inside odoo environment (can be useful for testing, or to fetch onchange data that are not stored in DB)](https://github.com/acsone/click-odoo)
+- [Remove data that have xml-id using `<delete>` tag](https://www.cybrosys.com/blog/delete-record-from-xml-code-odoo)
+- [rename custom module and keep the data](https://gist.github.com/antespi/38978614e522b1a99563)
 - [How to using ref by XML ID in the XML domain views](https://www.odoo.com/forum/help-1/odoo-8-how-to-use-ref-on-domain-xml-87862)
 - [Odoo installation on Mac M1](https://gist.github.com/rockavoldy/b38b253b15b05f3ba5bd3aed54d82aa4)
 
 ## Some PDF reporting thingies
 ### Create custom button to download report
-- When the button is created in view with the same model record you want to download, you can easily use type="action", so it would be
+- When the button is in form view that have the same model with your record, you can easily use type="action" and the name referenced to the template.
     ```xml
     <button name="%(studypermit_form)d" string="Download PDF" type="action" />
     ```
-    that studypermit_form is id of the model ir.actions.report that already created on that module
-- When the button is created in different model's view, which is not the same model as the record you want to download, you can create a method inside that model, and just call that action method from button with type="object" and use template with `report_action` to download the record with the template you need.
+    > [!NOTE]
+    > `studypermit_form` is a ir.actions.report template
+- When you're in different model view, and want to download record(s) from another model (Ex. you have 1 project, and you want to download all project.task report, and the template is for project.task model).
     ```xml
     <button name="action_download" type="object" string="Download PDF" />
     ```
@@ -45,10 +47,11 @@ Just make sure that, every PR you create, there is a description on what changed
         
         return template.report_action(self.res_id)
     ```
-    point template to the model ir.actions.report, and pass the record id to the parameter
+    > [!NOTE]
+    > `project_task_form.studypermit_form` is a template created for model project.task
 
 ### View report directly via URL
-While developing your report template, [you can easily view the result by accessing it through URL](https://stackoverflow.com/questions/34449536/odoo-view-report-through-url), every modern browser will load it directly in the browser and didn't need to download the file, so it won't filling up your storage.
+When you're creating new template for report, instead of downloading everytime you want to check the result, [you can easily view the template by accessing it through URL](https://stackoverflow.com/a/54926043), every modern browser will load it directly in the browser, so it not going to fill up your storage.
 
 URL Template
 ```
@@ -62,20 +65,21 @@ Or the html version
 ```
 http://localhost:8069/report/html/sale.report_saleorder/38
 ```
-Just keep in mind, some style is not supported in pdf. So, sometimes the style is good in html, but when trying to generate pdf, it's all broken, so, keep tinkering~
+> [!IMPORTANT]
+> Make sure to check the pdf result too beside of the html result, because some style is not supported or can have different behavior in pdf, like css grid-layout. So, keep tinkering~
 
 ### Internationalization report odoo 11
 - https://stackoverflow.com/questions/60827887/odoo12-can-i-translate-strings-in-reports
-- When using `--dev all` while running Odoo, it won't load the translation, [Odoo will directly render the data from the views](https://github.com/odoo/odoo/issues/35553), so translation won't work.
+- If you are working on i18n, make sure to not use `--dev` tag when running odoo instance, because [Odoo will directly render the data from the views, and skipping i18n data](https://github.com/odoo/odoo/issues/35553), so translation won't work.
 
 ### Report not consistent showing header and footer
-- See your terminal, if there is a WARNING from wkhtmltopdf like this
+- Check your terminal or log, if there is a WARNING from wkhtmltopdf like this
     ```sh
     WARNING <db_name> odoo.addons.base.models.ir_actions_report: wkhtmltopdf: b'Exit with code 1 due to network error: UnknownContentError\n'
     ```
-    Then it's mean you have [some resouces that can't be loaded, check again your resources like image, js, css, or font](https://stackoverflow.com/a/57991849/13028862). It's better to load it locally at the same server than using CDN, to minimize time out while fetching the content.
+    Then it's mean you have [some resouces that can't be loaded, check again your resources like image, js, css, or font](https://stackoverflow.com/a/57991849/13028862). It's better to put it inside the module at the same server than using CDN, removing 1 point of failure.
 
-## Backup and restore db (not specifically Odoo, but useful)
+## Backup and restore db (not specifically Odoo, but will be used every day)
 ### Restore DB
 1. When it's dumped as gz, use gunzip to extract and pipe directly to psql
     ```sh
@@ -88,7 +92,8 @@ Just keep in mind, some style is not supported in pdf. So, sometimes the style i
 3. When it's dumped as zip through DB Manager Odoo, restore again the DB via DB Manager Odoo
     
     `http://<server-address:port>/web/database/manager`
-    > You can always clean-up some data in db (like removing records from ir_mail_server table) by extracting the zip first, open and remove the data manually from `dump.sql`, and zip it again.
+    > [!NOTE]
+    > You can clean-up some data in db (like removing records from ir_mail_server table) by extracting the zip first, open `dump.sql` and remove some lines from it, then zip it again.
 
 ### Backup DB
 1. When you want to dump it as gunzip, so you can extract and pipe directly to psql
@@ -111,28 +116,32 @@ Just keep in mind, some style is not supported in pdf. So, sometimes the style i
 
 ## Odoo unit test
 ### Odoo 11
-Odoo 11 don't have test-tags, or any identifier to only run the test for particular test only, so if you don't use `--stop-after-init` flag, it will run all the test from all modules. So then you need to upgrade the module, and use stop-after-init, so then after odoo done upgrading the module, it will run the test, and stop after running that test without continue running the test on another module that are not upgraded explicitly. (you can change `-u` flag to `-i` flag if the module is not yet installed on the database)
+Odoo 11 didn't have a way to run specific unit test, if you run the instance by using tag `--test-enable` only, and update your module, all dependencies modules will run the test too, and it will take times to finish. So, to make sure the test is only run on your module that are intended to upgrade/install, you can add `--stop-after-init`
 ```sh
 python3 odoo-bin -c <conf_file.conf> -d <db_name> --test-enable --stop-after-init -u <module to test>
 ```
-command above will update (or install) the module, run the test for that module, and will stop the process after the test on that module is done.
+> [!NOTE]
+> change `-u` to `-i` if the module haven't been installed.
 
 ### Odoo 12 and Odoo 13
-On Odoo 12 and 13, There is `--test-tags` flag that you can use when you want to only run specific test that have tags. To implement it on your module, you can find the [documentation here](https://www.odoo.com/documentation/13.0/developer/reference/addons/testing.html#test-selection). and run the test with flag `--test-tags` like below
+On Odoo 12 and 13, There is new way to run specific test using `--test-tags`. To implement it on your unit test, you can find the [documentation here](https://www.odoo.com/documentation/13.0/developer/reference/addons/testing.html#test-selection). and run the test with flag `--test-tags` like below
 ```sh
 python3 odoo-bin -c <conf_file.conf> -d <db_name> --test-enable --test-tags "tag_1,tag_2,tag_3" --stop-after-init -u <module to test>
 ```
+> [!NOTE]
+> change `-u` to `-i` if the module haven't been installed.
 
 ### Odoo 14 and Odoo 15
-And there is another improvement to how flag `--test-tags` works, you can point it directly to the test method or class, so you don't need to always set the tags when you want to run another unit test on others module (like base). And your CLI command will be like this
+And there is another improvement to how flag `--test-tags` works, you can point it directly to the test method or class, so you don't need to set the tags when you want to run specific unit test, but don't want to change the code. And your CLI command will be like this
 ```sh
-python3 odoo-bin -c <conf_file.conf> -d <db_name> --test-enable --test-tags "/<module>:<class>.<method>" --stop-after-init -u <module to test>
+python3 odoo-bin -c <conf_file.conf> -d <db_name> --test-enable --test-tags "/<module_name>:<class>.<method>" --stop-after-init -u <module to test>
 ```
-you can find the [documentation here](https://www.odoo.com/documentation/15.0/developer/reference/backend/testing.html#test-selection) to add tag to your class, and for the improvement on `--test-tags` flag, [can check them here](https://www.odoo.com/documentation/15.0/developer/misc/other/cmdline.html#testing-configuration)
+See the format for flag `--test-tags` [in this documentation](https://www.odoo.com/documentation/15.0/developer/reference/cli.html#testing-configuration) and [this invocation documentation](https://www.odoo.com/documentation/15.0/developer/reference/backend/testing.html#invocation).
 
 ## Many2many field notation, and how to use them
 This notation is useful when you want to manipulate many2many or one2many fields
->**NOTE**: Odoo 16 changed this notation with odoo.fields.Command, below notation sometimes still work, but better [to use the new Command for Odoo 16 (and maybe up)](https://www.odoo.com/documentation/16.0/developer/reference/backend/orm.html#odoo.fields.Command)
+> [!IMPORTANT]
+> Odoo 16 changed this notation with odoo.fields.Command, below notation sometimes still work, but better [to use the new Command for Odoo 16 (and maybe newer Odoo version)](https://www.odoo.com/documentation/16.0/developer/reference/backend/orm.html#odoo.fields.Command)
 
 - (0, 0, { values }) link to a new record that needs to be created with the given values dictionary
 - (1, ID, { values }) update the linked record with id = ID (write values on it)
@@ -162,7 +171,7 @@ asset.write({
 1. And say, you are in app Sale, and you have some product_line, you want to remove some line but don't want to remove the product completely, can use `(3, id_of_the_line_you_want_to_remove)`
 
 ## Use Odoo with VSCode Debugger
-Current version of VSCode (1.64.0) has plenty of features that can be used to improve developer experience, one of this feature is Debugger. With this debugger, you can create a breakpoint and odoo will pause it on that breakpoint, then you can see the call stack that will reach to that breakpoint. So for odoo, we will use [debugpy](https://github.com/microsoft/debugpy). This debugpy can run as a standalone app and something can attach to the listen host and port you already defined with flag `--listen`, but vscode can make it listen directly so it will more simple to use.
+Current version of VSCode (1.64.0 at the time this written) has plenty of features that can be used to improve developer experience, one of this feature is Debugger. With this debugger, you can create a breakpoint and odoo will pause it on that breakpoint, then you can see the call stack that will reach to that breakpoint. So for odoo, we will use [debugpy](https://github.com/microsoft/debugpy). This debugpy can run as a standalone app and something can attach to the listen host and port you already defined with flag `--listen`, but vscode can make it listen directly so it will more simple to use.
 Run debugpy from terminal, and wait for anything attached to debugpy
 ```sh
 python3 -m debugpy --wait-for-client --listen 0.0.0.0:5678 odoo-bin <your-usual-odoo-command>
@@ -172,7 +181,7 @@ Example:
 python3 -m debugpy --wait-for-client --listen 0.0.0.0:5678 odoo-bin -c odoo.conf -d odoo13
 ```
 
-For this tutorial, i have an assumption that you already have your configuration to run and develop your odoo locally, so we just need to migrate that command or configuration to vscode launch.json
+For this one, i have an assumption that you already have your configuration to run and develop your odoo locally, so we just need to migrate that command or configuration to vscode launch.json
 1. Install debugpy first with pip
     ```sh
     pip3 install debugpy
@@ -222,7 +231,7 @@ For this tutorial, i have an assumption that you already have your configuration
 5. Now you can use the breakpoint feature too, and it will show you the call stack to reach that function from the first method called until paused by the breakpoint.
 
 ## Minimal odoo.conf
-When you run odoo by running it only using argument, odoo will automatically create default `.odoorc` file (or something alike) that will be used as default odoo configuration. This `.odoorc` here sometimes can replace your custom `odoo.conf` or the parameters, so there is a chance when you have 2 separate custom-addons directory, and you are trying to exclude 1 directory from `addons_path` parameter, the path can still be included. So, it's better to use separate `odoo.conf` when you're developing custom module for different Odoo version or database on the same machine.
+When you run odoo by running it only using argument, odoo will automatically create default `.odoorc` file (or something like that) that will be used as default odoo configuration. This `.odoorc` here sometimes have higher priority than your `odoo.conf` or the arguments, so there is a chance when you have 2 separate custom-addons directory, and you are trying to exclude 1 directory from `addons_path` parameter, the path can still be included. So, it's better to use separate `odoo.conf` for every project when you're developing custom module in the same machine.
 ```sh
 [options]
 db_name = False
@@ -230,8 +239,8 @@ db_user = odoo
 db_password = False
 addons_path = addons, odoo/addons, enterprise, custom-addons
 ```
-Above `odoo.conf` file is very minimal. You can put it inside odoo directory, same level as `odoo-bin`, then you can run it with only
+Above `odoo.conf` file is very minimal. You can put it at the same level as `odoo-bin`, then you can run it with
 ```sh
 python3 odoo-bin -c odoo.conf -d <db-name>
 ```
-i'm not putting the db_name inside the conf to make it easier when i need to switch DB for the same project, so i don't need to update the conf again and again while in development and doing test on different db.
+i didn't put `db_name` inside the conf to make it easier when i need to switch DB on the same project. So, i can easily change db for testing and development.
