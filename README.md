@@ -44,6 +44,7 @@ Just make sure that, every PR you create, it's better to have a description that
 - [Remove data that have xml-id using `<delete>` tag](https://www.cybrosys.com/blog/delete-record-from-xml-code-odoo)
 - [rename custom module and keep the data](https://gist.github.com/antespi/38978614e522b1a99563)
 - [How to using ref by XML ID in the XML domain views](https://www.odoo.com/forum/help-1/odoo-8-how-to-use-ref-on-domain-xml-87862)
+- [Difference between api.depends and api.onchange](https://stackoverflow.com/a/28271412)
 - [Odoo installation on Mac M1](https://gist.github.com/rockavoldy/b38b253b15b05f3ba5bd3aed54d82aa4)
 
 ## Some PDF reporting thingies
